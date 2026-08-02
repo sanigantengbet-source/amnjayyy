@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Sparkles, Mail, Link2, Loader2, CheckCircle2, XCircle, Send, ShieldCheck } from "lucide-react";
+import { Mail, Link2, Loader2, CheckCircle2, XCircle, Sparkles } from "lucide-react";
 import { SuccessFlow } from "@/components/success-flow";
-
+import heroCrowd from "@/assets/hero-crowd.png";
+import cardChat from "@/assets/card-chat.png";
+import cardSupport from "@/assets/card-support.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -26,6 +28,8 @@ type ApiResult = {
   error?: unknown;
   data?: unknown;
 };
+
+const NAV = ["Products", "Premium", "Features", "Live support", "Our plans"];
 
 function Index() {
   const [email, setEmail] = useState("");
@@ -55,64 +59,77 @@ function Index() {
   const verified = result?.success === true && mode === "verify";
 
   return (
-    <div className="min-h-screen text-foreground">
-      <header className="sticky top-0 z-20 border-b border-border/60 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-3xl items-center justify-between px-5 py-3.5">
-          <div className="flex items-center gap-2 text-[15px] font-semibold tracking-tight">
-            <span className="glass flex h-7 w-7 items-center justify-center rounded-full text-brand-blue">
-              <Sparkles className="h-3.5 w-3.5" />
+    <div className="min-h-screen px-3 py-4 sm:px-6 sm:py-8">
+      <div className="mx-auto max-w-6xl rounded-3xl border-2 border-foreground bg-surface px-4 py-5 sm:px-8 sm:py-8">
+        {/* Header */}
+        <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border-2 border-foreground bg-brand-yellow">
+              <Sparkles className="h-4 w-4" />
             </span>
-            AlightPro
+            <span className="truncate text-lg font-bold tracking-tight sm:text-xl">AlightPro</span>
           </div>
-          <span className="glass-soft rounded-full px-3 py-1.5 text-xs text-muted-foreground">
-            SANN404 FORUM GROUP
+          <nav className="hidden items-center gap-6 lg:flex">
+            {NAV.map((n) => (
+              <span key={n} className="cursor-default text-sm font-medium">
+                {n}
+              </span>
+            ))}
+          </nav>
+          <span className="shrink-0 rounded-lg border-2 border-foreground bg-brand-yellow px-3 py-1.5 text-xs font-semibold sm:text-sm">
+            SANN404
           </span>
-        </div>
-      </header>
+        </header>
 
-      <main className="mx-auto max-w-3xl px-5 py-12">
-        <div className="max-w-xl">
-          <div className="glass-soft mb-5 inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium text-muted-foreground">
-            <span className="h-1.5 w-1.5 rounded-full bg-brand-green" />
-            Alight Motion Premium · 1 Tahun
+        {/* Hero */}
+        <section className="mt-8 grid items-center gap-6 sm:mt-12 lg:grid-cols-[1fr_1.05fr] lg:gap-10">
+          <div>
+            <h1 className="text-[34px] font-bold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+              Premium across
+              <br />
+              the world
+            </h1>
+            <p className="mt-4 max-w-md text-[15px] leading-relaxed text-muted-foreground">
+              Platform untuk mengaktifkan Alight Motion Premium 1 Tahun lewat magic
+              link — kirim, salin, verifikasi.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <button
+                onClick={() => setMode("send")}
+                className={`rounded-xl border-2 border-foreground px-5 py-2.5 text-sm font-semibold transition ${
+                  mode === "send" ? "bg-brand-yellow" : "bg-surface"
+                }`}
+              >
+                Get started today
+              </button>
+              <button
+                onClick={() => setMode("verify")}
+                className={`rounded-xl border-2 border-foreground px-5 py-2.5 text-sm font-semibold transition ${
+                  mode === "verify" ? "bg-brand-yellow" : "bg-surface"
+                }`}
+              >
+                Verify link
+              </button>
+            </div>
           </div>
-          <h1 className="text-[32px] font-semibold leading-[1.15] tracking-tight sm:text-[44px]">
-            Premium generator that works for you.
-          </h1>
-          <p className="mt-4 text-base text-muted-foreground">
-            Kirim magic link ke email kamu, salin URL dari inbox, lalu verifikasi untuk
-            mengaktifkan premium 1 tahun.
-          </p>
-        </div>
+          <img
+            src={heroCrowd}
+            alt="Ilustrasi sekelompok orang mengangkat tangan"
+            width={1024}
+            height={912}
+            className="mx-auto w-full max-w-md lg:max-w-none"
+          />
+        </section>
 
-        <div className="glass mt-10 rounded-2xl p-6">
-          <div className="mb-6 flex gap-2">
-            {(["send", "verify"] as const).map((m) => {
-              const Icon = m === "send" ? Send : ShieldCheck;
-              const activeMode = mode === m;
-              return (
-                <button
-                  key={m}
-                  onClick={() => setMode(m)}
-                  className={`flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-all ${
-                    activeMode
-                      ? "border-brand-blue/40 bg-brand-blue/15 text-foreground"
-                      : "border-border bg-surface/40 text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  <Icon
-                    className={`h-3.5 w-3.5 ${activeMode ? "text-brand-blue" : ""}`}
-                  />
-                  {m === "send" ? "Send Link" : "Verify"}
-                </button>
-              );
-            })}
-          </div>
-
-          <form onSubmit={submit} className="space-y-4">
+        {/* Form panel */}
+        <section className="mt-8 rounded-2xl border-2 border-foreground bg-brand-pink p-4 sm:p-6">
+          <h2 className="text-xl font-bold sm:text-2xl">
+            {mode === "send" ? "Kirim magic link" : "Verifikasi & aktivasi"}
+          </h2>
+          <form onSubmit={submit} className="mt-4 space-y-4">
             <label className="block">
-              <span className="mb-1.5 flex items-center gap-1.5 text-[13px] font-medium text-foreground">
-                <Mail className="h-3.5 w-3.5 text-brand-blue" /> Email
+              <span className="mb-1.5 flex items-center gap-1.5 text-[13px] font-semibold">
+                <Mail className="h-3.5 w-3.5" /> Email
               </span>
               <input
                 type="email"
@@ -120,14 +137,14 @@ function Index() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="user@gmail.com"
-                className="glass-soft w-full rounded-xl px-4 py-3 text-sm outline-none transition placeholder:text-muted-foreground focus:border-brand-blue/60 focus:ring-2 focus:ring-brand-blue/25"
+                className="w-full rounded-xl border-2 border-foreground bg-surface px-4 py-3 text-sm outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-foreground/20"
               />
             </label>
 
             {mode === "verify" && (
               <label className="block">
-                <span className="mb-1.5 flex items-center gap-1.5 text-[13px] font-medium text-foreground">
-                  <Link2 className="h-3.5 w-3.5 text-brand-purple" /> Magic Link
+                <span className="mb-1.5 flex items-center gap-1.5 text-[13px] font-semibold">
+                  <Link2 className="h-3.5 w-3.5" /> Magic Link
                 </span>
                 <textarea
                   required
@@ -135,7 +152,7 @@ function Index() {
                   onChange={(e) => setLink(e.target.value)}
                   rows={3}
                   placeholder="https://alight..."
-                  className="glass-soft w-full rounded-xl px-4 py-3 font-mono text-[13px] outline-none transition placeholder:text-muted-foreground focus:border-brand-purple/60 focus:ring-2 focus:ring-brand-purple/25"
+                  className="w-full rounded-xl border-2 border-foreground bg-surface px-4 py-3 font-mono text-[13px] outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-foreground/20"
                 />
               </label>
             )}
@@ -143,7 +160,7 @@ function Index() {
             <button
               type="submit"
               disabled={loading}
-              className="flex w-full items-center justify-center gap-2 rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-foreground bg-brand-yellow px-4 py-3 text-sm font-bold transition hover:-translate-y-0.5 disabled:opacity-60"
             >
               {loading ? (
                 <>
@@ -159,14 +176,12 @@ function Index() {
 
           {result && !verified && (
             <div
-              className={`glass-soft mt-6 rounded-xl p-4 text-sm ${
-                result.success ? "border-brand-green/30" : "border-destructive/40"
-              }`}
+              className="mt-5 rounded-xl border-2 border-foreground bg-surface p-4 text-sm"
               style={{ animation: "step-in 0.4s ease-out both" }}
             >
-              <div className="mb-2 flex items-center gap-2 font-medium">
+              <div className="flex items-center gap-2 font-semibold">
                 {result.success ? (
-                  <CheckCircle2 className="h-4 w-4 text-brand-green" />
+                  <CheckCircle2 className="h-4 w-4" />
                 ) : (
                   <XCircle className="h-4 w-4 text-destructive" />
                 )}
@@ -180,7 +195,7 @@ function Index() {
                 </ol>
               )}
               {result.error != null && (
-                <pre className="mt-2 overflow-auto rounded-lg border border-border bg-surface-2/60 p-2 font-mono text-xs text-muted-foreground">
+                <pre className="mt-2 overflow-auto rounded-lg border-2 border-foreground bg-surface-2 p-2 font-mono text-xs">
                   {typeof result.error === "string"
                     ? result.error
                     : JSON.stringify(result.error, null, 2)}
@@ -188,7 +203,7 @@ function Index() {
               )}
             </div>
           )}
-        </div>
+        </section>
 
         {verified && (
           <SuccessFlow
@@ -197,32 +212,68 @@ function Index() {
           />
         )}
 
-        <div className="mt-8 grid gap-3 sm:grid-cols-3">
-          {[
-            { c: "text-brand-blue", bg: "bg-brand-blue/15", t: "Magic link", d: "Login tanpa password" },
-            { c: "text-brand-amber", bg: "bg-brand-amber/15", t: "Premium 1 Tahun", d: "Aktivasi penuh" },
-            { c: "text-brand-purple", bg: "bg-brand-purple/15", t: "Aman", d: "Token & PoW terverifikasi" },
-          ].map((f) => (
-            <div key={f.t} className="glass-soft rounded-2xl p-4">
-              <span
-                className={`mb-3 flex h-8 w-8 items-center justify-center rounded-full ${f.bg} ${f.c}`}
-              >
-                <Sparkles className="h-4 w-4" />
-              </span>
-              <p className="text-sm font-medium">{f.t}</p>
-              <p className="mt-0.5 text-[13px] text-muted-foreground">{f.d}</p>
+        {/* Feature cards */}
+        <section className="mt-6 grid gap-4 lg:grid-cols-2">
+          <article className="rounded-2xl border-2 border-foreground bg-brand-pink p-5 sm:p-6">
+            <div className="grid items-center gap-4 sm:grid-cols-[1fr_1.1fr]">
+              <img
+                src={cardChat}
+                alt="Ilustrasi dua orang berbagi layar ponsel"
+                loading="lazy"
+                width={912}
+                height={736}
+                className="mx-auto w-40 sm:w-full"
+              />
+              <div>
+                <h3 className="text-lg font-bold sm:text-xl">Community insights</h3>
+                <p className="mt-2 text-[13px] leading-relaxed">
+                  Semua proses login memakai magic link terenkripsi — tanpa password,
+                  tanpa data yang disimpan.
+                </p>
+                <span className="mt-3 inline-block border-b-2 border-foreground text-[13px] font-semibold">
+                  Check the community
+                </span>
+              </div>
             </div>
-          ))}
-        </div>
-      </main>
+          </article>
 
-      <footer className="border-t border-border/60">
-        <div className="mx-auto max-w-3xl px-5 py-6 text-[13px] text-muted-foreground">
-          Dev: <span className="text-foreground">SANN404 FORUM GROUP</span>
-        </div>
-      </footer>
+          <article className="rounded-2xl border-2 border-foreground bg-brand-yellow p-5 sm:p-6">
+            <div className="grid items-center gap-4 sm:grid-cols-[1fr_1.1fr]">
+              <img
+                src={cardSupport}
+                alt="Ilustrasi agen dukungan dengan headset"
+                loading="lazy"
+                width={912}
+                height={736}
+                className="mx-auto w-40 sm:w-full"
+              />
+              <div>
+                <h3 className="text-lg font-bold sm:text-xl">Free live support</h3>
+                <p className="mt-2 text-[13px] leading-relaxed">
+                  Ada kendala aktivasi premium? Tim SANN404 siap membantu kapan saja
+                  lewat forum group.
+                </p>
+                <span className="mt-3 inline-block border-b-2 border-foreground text-[13px] font-semibold">
+                  Compare plans
+                </span>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        {/* Footer */}
+        <footer className="mt-8 flex flex-col gap-3 border-t-2 border-foreground pt-5 text-[13px] font-medium sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-wrap gap-x-5 gap-y-2">
+            <span>Privacy</span>
+            <span>Terms</span>
+            <span>Other projects</span>
+            <span>Help center</span>
+          </div>
+          <span className="text-muted-foreground">
+            Dev: <span className="text-foreground">SANN404 FORUM GROUP</span>
+          </span>
+        </footer>
+      </div>
     </div>
   );
 }
-
-
